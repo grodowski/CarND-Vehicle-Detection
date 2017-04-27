@@ -29,6 +29,8 @@ The goals / steps of this project are the following:
 ---
 ### Writeup
 
+*Although the code was initially created in Jupyter, please evaluate the final exported `VehicleDetection.py`*
+
 ### Histogram of Oriented Gradients (HOG)
 
 #### 1. Explain how (and identify where in your code) you extracted HOG features from the training images.
@@ -116,19 +118,24 @@ YCrCb - 3 channel
 0.9932
 ```
 
+In addition to HOG features I have incoroporated 32x32 binned images and color
+histogram to the final feature vector, which helped achieve the final validation
+accuracy of 99.32%.
+
 ### Sliding Window Search
 
 #### 1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
 
 I decided to use a range of six scales (from 1.1 to 3.5), but my laptop performance didn't allow me to
-stick to it, as it would take about 2h to complete processing `project_video.mp4` (about 8s per frame).
+stick to it, as it would take a very long time to process `project_video.mp4` (about 8s per frame).
 
-Finally, I decided to use two scales:
+Finally, I decided to use three scales:
 
-- `ystart=384, ystop=512, scale=2.5`
-- `ystart=384, ystop=660, scale=1.4`
+- `ystart=380, ystop=550, scale=1.3`
+- `ystart=400, ystop=600, scale=1.7`
+- `ystart=450, ystop=700, scale=2.5`
 
-These two passes gave optimal results and allowed me to acheive processing speed of just above 1 fps. Code for sliding window search could be found in `Processor.frame` and `find_cars` functions in the Jupyter notebook.
+These gave quite good results and allowed me to acheive a processing speed of just above 1 fps. Code for sliding window search could be found in `Processor.frame` and `find_cars` functions in the python script.
 
 #### 2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
@@ -166,7 +173,7 @@ Here's an example result showing the heatmap from a single frame (after threshol
 
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-1. False positives - the pipeline is prone to false positives. It is difficult to fine an optimal parameter setup, as there's always a tradeoff between the stability and size of the correct bounding boxes, versus the number of random false positives on the video. I could devote some time in the future to improve this either using a smarter approach to sliding windows or a different classification method (a neural network?).
+1. False positives - the pipeline is prone to false positives. It is difficult to fine an optimal parameter setup, as there's always a tradeoff between the stability and size of the correct bounding boxes, versus the number of random false positives on the video. I could devote some time in the future to improve this either using a smarter approach to sliding windows or a different classification method (a convolutional neural network?).
 
 2. Performance - I had to reduce the number of scales from a range of 6 to just 2, so that the full video could
 be processed in a reasonable time on my laptop. Even though I achieved almost 1 fps it is still way to slow to be considered ready for real time usage.

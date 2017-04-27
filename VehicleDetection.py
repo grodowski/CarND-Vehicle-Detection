@@ -120,11 +120,8 @@ except FileNotFoundError:
     print(round(t3-t2, 2), 'Seconds to train SVC')
     print(round(svc.score(X_test, y_test), 4))
 
-
-# In[6]:
-
-pickle.dump(svc, open('svc_ycrcb.pickle', 'wb'))
-pickle.dump(X_scaler, open('x_scaler_ycrcb.pickle', 'wb'))
+    pickle.dump(svc, open('svc_ycrcb.pickle', 'wb'))
+    pickle.dump(X_scaler, open('x_scaler_ycrcb.pickle', 'wb'))
 
 
 # In[7]:
@@ -233,32 +230,32 @@ def heatmap(img, bbox_list, thresh=1):
 
 class Processor:
     def __init__(self):
-            self.heat_hist = deque(maxlen=4)
+            self.heat_hist = deque(maxlen=8)
 
     def frame(self, img):
         pred_bbox = []
-        ret = find_cars(img, svc, X_scaler, ystart=300, ystop=550, scale=1.1)
+        ret = find_cars(img, svc, X_scaler, ystart=380, ystop=550, scale=1.3)
         if len(ret) > 0:
             pred_bbox.append(ret)
-        ret = find_cars(img, svc, X_scaler, ystart=450, ystop=600, scale=1.5)
+        ret = find_cars(img, svc, X_scaler, ystart=400, ystop=600, scale=1.7)
         if len(ret) > 0:
             pred_bbox.append(ret)
-        ret = find_cars(img, svc, X_scaler, ystart=350, ystop=700, scale=2.2)
+        ret = find_cars(img, svc, X_scaler, ystart=450, ystop=700, scale=2.5)
         if len(ret) > 0:
             pred_bbox.append(ret)
 
         if len(pred_bbox) > 0:
             pred_bbox = np.concatenate(pred_bbox)
             # compute single frame heatmap
-            heatmap_single = heatmap(img, pred_bbox, 5)
+            heatmap_single = heatmap(img, pred_bbox, 1)
             self.heat_hist.append(heatmap_single)
 
         if len(self.heat_hist) is 0:
             return img
 
         # average heatmaps
-        heat_sum = np.mean(self.heat_hist, 0)
-        labels = label(apply_threshold(heat_sum, 6))
+        heat_sum = np.sum(self.heat_hist, 0)
+        labels = label(apply_threshold(heat_sum, 4))
         return draw_labeled_bboxes(img, labels)
 
 

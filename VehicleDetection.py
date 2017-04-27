@@ -268,7 +268,7 @@ from moviepy.editor import VideoFileClip
 
 p = Processor()
 output = 'project_video_output.mp4'
-clip1 = VideoFileClip("project_video.mp4").subclip(20,21)
+clip1 = VideoFileClip("project_video.mp4")
 clip = clip1.fl_image(p.frame)
 clip.write_videofile(output, audio=False)
 
